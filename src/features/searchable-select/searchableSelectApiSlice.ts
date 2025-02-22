@@ -1,11 +1,10 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import axiosBaseQuery from "../../api/axiosBaseQuery";
 
-//http://api.openweathermap.org/geo/1.0/direct?q=London&limit=5&appid={API key}
 const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: axiosBaseQuery({
-    baseUrl: "http://api.openweathermap.org/",
+    baseUrl: "https://api.openweathermap.org/",
   }),
   endpoints: builder => ({
     getCities: builder.query<any, string>({
