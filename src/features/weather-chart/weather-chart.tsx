@@ -37,7 +37,7 @@ const WeatherChart = () => {
         humidity: item.main.humidity,
         wind: item.wind.speed,
       })) ?? [],
-    [],
+    [weather],
   );
 
   const gradientOffset = () => {
