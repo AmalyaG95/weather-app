@@ -6,7 +6,6 @@ import WeatherChart from "./features/weather-chart/weather-chart";
 
 const App = () => {
   const city = useAppSelector(selectCityName);
-  // const { data: cities = [] } = useGetCitiesQuery(city);
 
   return (
     <div className="App">

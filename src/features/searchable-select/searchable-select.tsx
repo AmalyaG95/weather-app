@@ -22,19 +22,16 @@ import {
 } from "@/features/searchable-select/searchableSelectApiSlice";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { selectCity, selectCityName } from "../globalSlice";
+import SelectDataToDisplay from "@/components/select-data-to-display";
+import getCitiesOptions from "@/utils/getAvailableOptions";
 
 const SearchableSelect = () => {
-  const [open, setOpen] = React.useState(false);
   const dispatch = useAppDispatch();
+  const [open, setOpen] = React.useState(false);
   const city = useAppSelector(selectCityName);
   const [getCities, { data: cities = [] }] = useLazyGetCitiesQuery();
   const [getWeather] = useLazyGetWeatherQuery();
-  const availableOptions =
-    cities.map(({ name, lat, lon }) => ({
-      id: `${lat}-${lon}`,
-      label: name,
-      value: name.toLowerCase(),
-    })) ?? [];
+  const availableOptions = getCitiesOptions(cities) ?? [];
 
   const handleGetCity = ({ currentTarget: { value } }) => {
     getCities(value, true);
@@ -42,20 +39,21 @@ const SearchableSelect = () => {
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <div className="relative">
+      <div className="flex justify-center relative pt-36 gap-2">
         <PopoverTrigger asChild>
           <Button
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-[200px] justify-between mt-36"
+            className="w-[200px] justify-between"
           >
             {city
               ? availableOptions.find(option => option.value === city)?.label
               : "Select a city..."}
-            <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            <ChevronDown className="ml-2 h-4 w-4 shrink-1 opacity-50" />
           </Button>
         </PopoverTrigger>
+        <SelectDataToDisplay />
         <PopoverContent className="w-[200px] p-0 absolute!">
           <Command>
             <CommandInput
@@ -96,4 +94,4 @@ const SearchableSelect = () => {
   );
 };
 
-export default SearchableSelect;
+export default React.memo(SearchableSelect);

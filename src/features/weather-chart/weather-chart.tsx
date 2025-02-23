@@ -1,3 +1,4 @@
+import * as React from "react";
 import {
   XAxis,
   YAxis,
@@ -11,14 +12,16 @@ import {
   useGetCitiesQuery,
   useGetWeatherQuery,
 } from "../searchable-select/searchableSelectApiSlice";
-import { selectCityName } from "../globalSlice";
+import { selectCityName, selectParam } from "../globalSlice";
 import { useAppSelector } from "@/app/hooks";
-import ChartCustomTooltip from "@/components/ChartCustomTooltip";
+import ChartCustomTooltip from "@/components/chart-custom-tooltip";
 import formatTime from "@/utils/formatTime";
-import { memo, useMemo } from "react";
+import getGradientOffset from "@/utils/getGradientOffset";
+import { TListItem } from "./types";
 
 const WeatherChart = () => {
   const city = useAppSelector(selectCityName);
+  const { label, value, color1, color2 } = useAppSelector(selectParam);
   const { data: cities = [] } = useGetCitiesQuery(city);
   const { data: weather = {} } = useGetWeatherQuery(
     {
@@ -28,32 +31,22 @@ const WeatherChart = () => {
     { skip: !cities.length },
   );
 
-  const data = useMemo(
+  const data = React.useMemo(
     () =>
-      weather?.list?.map(item => ({
-        time: item.dt_txt,
-        temperature: Math.round(item.main.temp - 273.15),
-        pressure: item.main.pressure,
-        humidity: item.main.humidity,
-        wind: item.wind.speed,
+      weather?.list?.map(({ dt_txt, main, wind }: TListItem) => ({
+        time: dt_txt,
+        temperature: Math.round(main.temp - 273.15),
+        pressure: main.pressure,
+        humidity: main.humidity,
+        wind: wind.speed,
       })) ?? [],
     [weather],
   );
 
-  const gradientOffset = () => {
-    const dataMax = Math.max(...data?.map(i => i.temperature));
-    const dataMin = Math.min(...data?.map(i => i.temperature));
-    if (dataMax <= 0) {
-      return 0;
-    }
-    if (dataMin >= 0) {
-      return 1;
-    }
-
-    return dataMax / (dataMax - dataMin);
-  };
-
-  const off = gradientOffset();
+  const off = React.useMemo(
+    () => getGradientOffset(data?.map(({ temperature }) => temperature)),
+    [data],
+  );
 
   return (
     <>
@@ -81,7 +74,7 @@ const WeatherChart = () => {
               />
               <YAxis
                 label={{
-                  value: "Temperature (°C)",
+                  value: label,
                   angle: -90,
                   position: "insideLeft",
                 }}
@@ -89,13 +82,13 @@ const WeatherChart = () => {
               <Tooltip content={<ChartCustomTooltip />} />
               <defs>
                 <linearGradient id="splitColor" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset={off} stopColor="red" stopOpacity={1} />
-                  <stop offset={off} stopColor="blue" stopOpacity={1} />
+                  <stop offset={off} stopColor={color1} stopOpacity={1} />
+                  <stop offset={off} stopColor={color2} stopOpacity={1} />
                 </linearGradient>
               </defs>
               <Area
                 type="monotone"
-                dataKey="temperature"
+                dataKey={value}
                 stroke="#000"
                 fill="url(#splitColor)"
               />
@@ -107,4 +100,4 @@ const WeatherChart = () => {
   );
 };
 
-export default memo(WeatherChart);
+export default React.memo(WeatherChart);

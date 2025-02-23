@@ -2,33 +2,12 @@
   height: 100vh;
   text-align: center;
   position: relative;
-  /* height: 200px; */
-  /* border: 1px solid;
-  background-image: radial-gradient(
-    circle 150px at 25% 33%,
-    white,
-    yellow,
-    lightyellow,
-    aqua
-  ); */
-
-  /* height: 150px; */
-  /* width: 150px; */
-  background: radial-gradient(
-    circle at top left,
-    #ffd700 15%,
-    /* Small bright golden sun */ white 37%,
-    /* Warm orange glow */ #ffa500 20%,
-    /* Deeper orange */ #ffd700 35%,
-    /* Fiery red-orange */ #87ceeb 100% /* Soft sky blue */
-  );
-
   background: radial-gradient(
     circle at top left,
     #8aefe8 1%,
-    /* Small bright golden sun */ white 5%,
-    /* Warm orange glow */ #79bae6 9%,
-    /* Deeper orange */ #f1f1f5 15%,
-    /* Fiery red-orange */ #3db7e9 100% /* Soft sky blue */
+    white 5%,
+    #79bae6 9%,
+    #f1f1f5 15%,
+    #3db7e9 100%
   );
 }

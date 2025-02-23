@@ -15,7 +15,7 @@ const axiosBaseQuery =
   ({ baseUrl = "" }: { baseUrl?: string } = {}): BaseQueryFn<
     AxiosBaseQueryArgs,
     unknown,
-    { status?: number; data?: any }
+    { status?: number; data?: unknown }
   > =>
   async ({ url, method, data, params, headers }) => {
     try {
